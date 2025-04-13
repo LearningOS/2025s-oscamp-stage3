@@ -2,16 +2,19 @@
 
 cd arceos/ || exit
 
-rm pflash.img -f 
-rm disk.img -f
+# rm pflash.img -f 
+# rm disk.img -f
 
-make pflash_img
-make disk_img
+# make pflash_img
+# make disk_img
 
 
 make run A=exercises/print_with_color/ > a.txt 2>/dev/null
 
-output=$(tail -n1 ./a.txt | grep -a "$(printf '\x1b')")
+output=$(grep -a "$(printf '\x1b')"  ./a.txt | grep "Hello, Arceos!"  ) || true
+
+# cat a.txt
+# echo "$output"
 
 rm a.txt -f
 
