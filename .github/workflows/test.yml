@@ -84,45 +84,45 @@ jobs:
     steps:
       - name : Deploy challenge to pages
         env : 
-           course_id: 1818
-           post_api: https://api.opencamp.cn/web/api/courseRank/createByThirdToken
-           token: 1c2003a5650243bb8efa1662fbcd7214
-           github_user: ${{ github.actor }}
-           lab1_score: ${{ needs.basic-test.outputs.lab1_points }}
+          course_id: ${{ secrets.ARCEOS_CHALLENGE_2025_SPRING_COURSE_ID }}
+          post_api: ${{ secrets.ARCEOS_CHALLENGE_2025_SPRING_POST_API }}
+          token: ${{ secrets.ARCEOS_CHALLENGE_2025_SPRING_TOKEN }}
+          github_user: ${{ github.actor }}
+          lab1_score: ${{ needs.basic-test.outputs.lab1_points }}
         run : |
-           echo "Lab1: $lab1_score"
+          echo "Lab1: $lab1_score"
 
-           lab1_score_after=$(echo "$lab1_score" | tr -d '\r\n ')
+          lab1_score_after=$(echo "$lab1_score" | tr -d '\r\n ')
 
-           total_score=373
+          total_score=373
 
-           score_json=$(jq -n \
-           --arg channel "github" \
-           --arg courseId "$course_id" \
-           --arg name "$github_user" \
-           --arg score "$lab1_score_after" \
-           --arg totalScore "$total_score" \
-           --arg ext "{}" \
-           '{
-           channel: $channel,
-           courseId: $courseId,
-           name: $name,
-           score: ($score | tonumber),
-           totalScore: ($totalScore | tonumber),
-           ext: $ext
-           }')
-             
-           response=$(curl -X POST "$post_api" \
-            -H "accept: application/json;charset=utf-8" \
-            -H "Content-Type: application/json" \
-            -H "token: $token" \
-            -d "$score_json" \
-            -s)
+          score_json=$(jq -n \
+          --arg channel "github" \
+          --arg courseId "$course_id" \
+          --arg name "$github_user" \
+          --arg score "$lab1_score_after" \
+          --arg totalScore "$total_score" \
+          --arg ext "{}" \
+          '{
+          channel: $channel,
+          courseId: $courseId,
+          name: $name,
+          score: ($score | tonumber),
+          totalScore: ($totalScore | tonumber),
+          ext: $ext
+          }')
+            
+          response=$(curl -X POST "$post_api" \
+          -H "accept: application/json;charset=utf-8" \
+          -H "Content-Type: application/json" \
+          -H "token: $token" \
+          -d "$score_json" \
+          -s)
 
-           if echo "$response" | grep -q '"result":1'; then
-             echo "Success: Score submitted"
-           else
-             echo "Error: API submission failed"
-            echo "$response"
-             exit 1
-           fi
+          if echo "$response" | grep -q '"result":1'; then
+            echo "Success: Score submitted"
+          else
+            echo "Error: API submission failed"
+          echo "$response"
+            exit 1
+          fi
