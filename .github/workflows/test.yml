@@ -79,9 +79,9 @@ jobs:
     steps:
       - name : Deploy basic to pages
         env : 
-          course_id: 1806
-          post_api: https://api.opencamp.cn/web/api/courseRank/createByThirdToken
-          token: fbee89b9866b46318cddeec86f99f331
+          course_id: ${{ secrets.ARCEOS_2025_SPRING_COURSE_ID }}
+          post_api: ${{ secrets.ARCEOS_2025_SPRING_POST_API }}
+          token: ${{ secrets.ARCEOS_2025_SPRING_TOKEN }}
           github_user: ${{ github.actor }}
           basic_score: ${{ needs.basic-test.outputs.basic_points }}
         run : |
